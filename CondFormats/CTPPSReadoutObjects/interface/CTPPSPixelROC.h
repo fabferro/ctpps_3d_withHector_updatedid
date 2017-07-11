@@ -4,12 +4,8 @@
 #include "CondFormats/Serialization/interface/Serializable.h"
 
 #include "CondFormats/CTPPSReadoutObjects/interface/CTPPSPixelIndices.h"
-/*
-#include "CondFormats/SiPixelObjects/interface/FrameConversion.h"
-#include "CondFormats/SiPixelObjects/interface/LocalPixel.h"
-#include "CondFormats/SiPixelObjects/interface/GlobalPixel.h"
-*/
-#include <boost/cstdint.hpp>
+
+#include <cstdint>
 #include <string>
 
 /** \class PixelROC
@@ -23,12 +19,12 @@
 class CTPPSPixelROC {
 public:
 
-  /// dummy
 CTPPSPixelROC() : theDetUnit(0), theIdDU(0), theIdLk(0) {
-    theIndices = new CTPPSPixelIndices();
-  } 
-
-
+  }
+  
+  ~CTPPSPixelROC(){
+  }
+  
   /// ctor with DetUnit id, 
   /// ROC number in DU (given by token passage), 
   /// ROC number in Link (given by token passage),
@@ -43,16 +39,13 @@ CTPPSPixelROC() : theDetUnit(0), theIdDU(0), theIdLk(0) {
   /// id of this ROC in parent Link.
   unsigned int idInLink() const { return theIdLk; }
 
-  /// converts DU position to local. 
-  /// If GlobalPixel is outside ROC the resulting LocalPixel is not inside ROC.
-  /// (call to inside(..) recommended)
   std::pair<int,int>  toLocal(const std::pair<int,int> &modulePixel ) const {
  
     int rocPixelRow, rocPixelColumn, idDU;
     int modulePixelRow = modulePixel.first; 
     int modulePixelColumn = modulePixel.second;
 
-    theIndices->transformToROC(modulePixelColumn, modulePixelRow, idDU, rocPixelColumn, rocPixelRow);
+    theIndices.transformToROC(modulePixelColumn, modulePixelRow, idDU, rocPixelColumn, rocPixelRow);
 
     std::pair<int,int> rocPixel;
     rocPixel = std::make_pair(rocPixelRow, rocPixelColumn);
@@ -68,7 +61,7 @@ CTPPSPixelROC() : theDetUnit(0), theIdDU(0), theIdLk(0) {
     int rocPixelRow = rocPixel.first; 
     int rocPixelColumn = rocPixel.second;
 
-    theIndices->transformToModule(rocPixelColumn, rocPixelRow, theIdDU, modulePixelColumn, modulePixelRow);
+    theIndices.transformToModule(rocPixelColumn, rocPixelRow, theIdDU, modulePixelColumn, modulePixelRow);
 
     std::pair<int,int> modulePixel;
     modulePixel = std::make_pair(modulePixelRow, modulePixelColumn);
@@ -76,7 +69,6 @@ CTPPSPixelROC() : theDetUnit(0), theIdDU(0), theIdLk(0) {
     return modulePixel;
 
   }
-
 
   std::pair<int,int>  toGlobalfromDcol(const std::pair<int,int> &rocPixel ) const {
  
@@ -88,9 +80,9 @@ CTPPSPixelROC() : theDetUnit(0), theIdDU(0), theIdLk(0) {
     int rocPixelRow ; 
     int rocPixelColumn ;
 
-    theIndices->convertDcolToCol(rocDcol, rocPxl, rocPixelColumn, rocPixelRow);
+    theIndices.convertDcolToCol(rocDcol, rocPxl, rocPixelColumn, rocPixelRow);
 
-    theIndices->transformToModule(rocPixelColumn, rocPixelRow, theIdDU, modulePixelColumn, modulePixelRow);
+    theIndices.transformToModule(rocPixelColumn, rocPixelRow, theIdDU, modulePixelColumn, modulePixelRow);
 
     std::pair<int,int> modulePixel;
     modulePixel = std::make_pair(modulePixelRow, modulePixelColumn);
@@ -110,8 +102,8 @@ CTPPSPixelROC() : theDetUnit(0), theIdDU(0), theIdLk(0) {
 private:
   uint32_t theDetUnit;
   unsigned int theIdDU, theIdLk;
-//  FrameConversion theFrameConverter COND_TRANSIENT;
-  CTPPSPixelIndices *theIndices;
+
+  CTPPSPixelIndices theIndices;
 
   COND_SERIALIZABLE;
 };

@@ -36,7 +36,7 @@ process.source = cms.Source("EmptyIOVSource",
 
 process.load("CondCore.CondDB.CondDB_cfi")
 # input database (in this case local sqlite file)
-process.CondDB.connect = 'sqlite_file:CalibForward/CTPPSPixelCalibration/test/CTPPSPixel_DAQMapping_AnalysisMask_220_far.db'
+process.CondDB.connect = 'sqlite_file:CondTools/CTPPS/test/CTPPSPixel_DAQMapping_AnalysisMask_220_far.db'
 
 
 process.PoolDBESSource = cms.ESSource("PoolDBESSource",
@@ -58,7 +58,7 @@ process.PoolDBESSource = cms.ESSource("PoolDBESSource",
 ##########################################################
 
 ##########SimTransport###########
-process.load('SimTransport.HectorProducerForCTPPS.HectorTransport_cfi')
+process.load('SimTransport.HectorProducer.HectorTransportCTPPS_cfi')
 
 process.load("SimG4Core.Application.g4SimHits_cfi")
 process.g4SimHits.Generator.ApplyPCuts          = False

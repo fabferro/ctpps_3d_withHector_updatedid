@@ -10,6 +10,7 @@
 
 #include "DataFormats/CTPPSDetId/interface/TotemRPDetId.h"
 #include "DataFormats/CTPPSDetId/interface/CTPPSPixelDetId.h"
+#include "DataFormats/CTPPSDetId/interface/CTPPSDiamondDetId.h"
 #include "CLHEP/Vector/ThreeVector.h"
 #include "CLHEP/Vector/Rotation.h"
 #include "Geometry/VeryForwardGeometryBuilder/interface/DetGeomDesc.h"
@@ -39,11 +40,11 @@ class DetId;
 class TotemRPGeometry
 {
   public:
-    typedef std::map<unsigned int, DetGeomDesc* > mapType;
-    typedef std::map<int, DetGeomDesc* > RPDeviceMapType;
+    typedef std::map<unsigned int, const DetGeomDesc* > mapType;
+    typedef std::map<int, const DetGeomDesc* > RPDeviceMapType;
     typedef std::map<unsigned int, std::set<unsigned int> > mapSetType;
 
-    TotemRPGeometry() {std::cout << " TOTEM RP GEOMETRY " << std::endl;}
+    TotemRPGeometry() {}
     ~TotemRPGeometry() {}
 
     /// build up from DetGeomDesc
@@ -65,11 +66,15 @@ class TotemRPGeometry
     ///\brief returns geometry of a detector
     /// performs necessary checks, returns NULL if fails
     /// input is raw ID
-    DetGeomDesc *GetDetector(unsigned int) const;
+    const DetGeomDesc *GetDetector(unsigned int) const;
 
-    DetGeomDesc const *GetDetector(const TotemRPDetId & id) const
+    const DetGeomDesc* GetDetector( const TotemRPDetId& id ) const
     {
-      return GetDetector(id.rawId());
+      return GetDetector( id.rawId() );
+    }
+    const DetGeomDesc* GetDetector( const CTPPSDetId& id ) const
+    {
+      return GetDetector( id.rawId() );
     }
 
     /// same as GetDetector
@@ -85,7 +90,7 @@ class TotemRPGeometry
     CLHEP::Hep3Vector GetDetEdgeNormalVector(unsigned int id) const;
 
     /// returns geometry of a RP box
-    DetGeomDesc *GetRPDevice(unsigned int id) const;
+    const DetGeomDesc *GetRPDevice(unsigned int id) const;
 
     /// returns the (outer) position of the thin foil of a RP box
     CLHEP::Hep3Vector GetRPThinFoilPosition(int copy_no) const;
@@ -122,26 +127,26 @@ class TotemRPGeometry
     void BuildSets();
 
     /// after checks returns set of stations corresponding to the given arm ID
-    std::set<unsigned int> StationsInArm(unsigned int) const;
+    std::set<unsigned int> const& StationsInArm(unsigned int) const;
 
     /// after checks returns set of RP corresponding to the given station ID
-    std::set<unsigned int> RPsInStation(unsigned int) const;
+    std::set<unsigned int> const& RPsInStation(unsigned int) const;
     
     /// after checks returns set of detectors corresponding to the given RP ID
     /// containts decimal detetector IDs
-    std::set<unsigned int> DetsInRP(unsigned int) const;
+    std::set<unsigned int> const& DetsInRP(unsigned int) const;
 
     /// coordinate transformations between local<-->global reference frames
     /// dimensions in mm, raw ID expected
-    CLHEP::Hep3Vector LocalToGlobal(DetGeomDesc *gd, const CLHEP::Hep3Vector r) const;
-    CLHEP::Hep3Vector GlobalToLocal(DetGeomDesc *gd, const CLHEP::Hep3Vector r) const;
-    CLHEP::Hep3Vector LocalToGlobal(unsigned int id, const CLHEP::Hep3Vector r) const;
-    CLHEP::Hep3Vector GlobalToLocal(unsigned int id, const CLHEP::Hep3Vector r) const;
+    CLHEP::Hep3Vector LocalToGlobal(const DetGeomDesc *gd, const CLHEP::Hep3Vector& r) const;
+    CLHEP::Hep3Vector GlobalToLocal(const DetGeomDesc *gd, const CLHEP::Hep3Vector& r) const;
+    CLHEP::Hep3Vector LocalToGlobal(unsigned int id, const CLHEP::Hep3Vector& r) const;
+    CLHEP::Hep3Vector GlobalToLocal(unsigned int id, const CLHEP::Hep3Vector& r) const;
 
     /// direction transformations between local<-->global reference frames
     /// (dimensions in mm), raw ID expected
-    CLHEP::Hep3Vector LocalToGlobalDirection(unsigned int id, const CLHEP::Hep3Vector dir) const;
-    CLHEP::Hep3Vector GlobalToLocalDirection(unsigned int id, const CLHEP::Hep3Vector dir) const;
+    CLHEP::Hep3Vector LocalToGlobalDirection(unsigned int id, const CLHEP::Hep3Vector& dir) const;
+    CLHEP::Hep3Vector GlobalToLocalDirection(unsigned int id, const CLHEP::Hep3Vector& dir) const;
 
     /// returns translation (position) of a detector
     /// raw ID as input

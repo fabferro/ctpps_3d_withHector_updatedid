@@ -1,4 +1,4 @@
-/****************************************************************************
+ /****************************************************************************
  *
  * 
  * Authors: 
@@ -7,9 +7,8 @@
  ****************************************************************************/
 
 #include "CondFormats/CTPPSReadoutObjects/interface/CTPPSPixelFramePosition.h"
-
+#include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include <iomanip>
-#include <cstdlib>
 
 using namespace std;
 
@@ -28,7 +27,7 @@ std::ostream& operator << (std::ostream& s, const CTPPSPixelFramePosition &fp)
 
 void CTPPSPixelFramePosition::printXML()
 {
-  cout << "\" FEDId=\"" << getFEDId()
+  edm::LogInfo("printXML") << "\" FEDId=\"" << getFEDId()
        << "\" FMCId=\"" << getFMCId()
        << "\" ChannelIdx=\"" << getChannelIdx()
        << "\" ROC=\"" << getROC()
@@ -38,7 +37,7 @@ void CTPPSPixelFramePosition::printXML()
 //----------------------------------------------------------------------------------------------------
 
 unsigned char CTPPSPixelFramePosition::setXMLAttribute(const std::string &attribute, const std::string &value,
-						  unsigned char &flag)
+						       unsigned char &flag)
 {
   unsigned int v = atoi(value.c_str());
 

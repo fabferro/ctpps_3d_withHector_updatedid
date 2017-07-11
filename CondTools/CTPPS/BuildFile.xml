@@ -1,0 +1,10 @@
+<use   name="CondFormats/DataRecord"/>
+<use   name="CondFormats/CTPPSReadoutObjects"/>
+<use   name="CondCore/DBOutputService"/>
+<use   name="FWCore/ServiceRegistry"/>
+<use   name="root"/>
+<use   name="rootcore"/>
+
+<export>
+<lib name="1" />
+</export> 

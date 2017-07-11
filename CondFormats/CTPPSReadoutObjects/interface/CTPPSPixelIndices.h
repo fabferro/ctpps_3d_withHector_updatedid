@@ -2,7 +2,7 @@
 #define CTPPS_PIXELINDICES_H
 
 #include <iostream>
-
+#include "FWCore/MessageLogger/interface/MessageLogger.h"
 /**
  * Numbering of the pixels inside the readout chip (ROC).
  * There is a column index and a row index.
@@ -26,10 +26,10 @@
   sensor side = bump bonding side = wire bonding side
 
 
-                   ^   sim y
-                   |
-                   |
-                   |
+  ^   sim y
+  |
+  |
+  |
   0-----------------------------------
   |                |                  |
   |        2      |       3         |
@@ -48,33 +48,27 @@
   |
   <------------------------------------------ 0,0
   det rows x
-                    0  beam
-
-
-
-
+  0  beam
 
 */
 
-
-
 namespace {
-  // A few constants just for error checking
+ 
   // The maximum number of ROCs in the X (row) direction per sensor.
-  const int maxROCsInX = 2;  //  
+  constexpr int maxROCsInX = 2;  //  
   // The maximum number of ROCs in the Y (column) direction per sensor.
-  const int maxROCsInY = 3;  //
+  constexpr int maxROCsInY = 3;  //
   // The nominal number of double columns per ROC is 26. 
-  const int DColsPerROC = 26; 
+  constexpr int DColsPerROC = 26; 
   // Default ROC size 
-  const int ROCSizeInX = 80;  // ROC row size in pixels 
-  const int ROCSizeInY = 52;  // ROC col size in pixels 
+  constexpr int ROCSizeInX = 80;  // ROC row size in pixels 
+  constexpr int ROCSizeInY = 52;  // ROC col size in pixels 
   // Default DET barrel size 
-  const int defaultDetSizeInX = 160;  // Det row size in pixels (2 ROCs) 
-  const int defaultDetSizeInY = 156; //  Det col size in pixels (3 ROCs) // 416 for Det barrel col size in pixels 
-  
+  constexpr int defaultDetSizeInX = 160;  // Det row size in pixels (2 ROCs) 
+  constexpr int defaultDetSizeInY = 156; //  Det col size in pixels (3 ROCs) 
+
   // Check the limits
-  const bool CTPPS_CHECK_LIMITS = true;
+  constexpr bool CTPPS_CHECK_LIMITS = true;
 }
 
 class CTPPSPixelIndices {
@@ -92,11 +86,11 @@ CTPPSPixelIndices() :
 
     if(CTPPS_CHECK_LIMITS) {
       if(theChipsInX<1 || theChipsInX>maxROCsInX) 
-	std::cout << " CTPPSPixelIndices: Error in ROCsInX " 
-		  << theChipsInX <<" "<<theRowsInDet<<" "<<ROCSizeInX<<std::endl;
+	edm::LogError("RPix") << " CTPPSPixelIndices: Error in ROCsInX " 
+		  << theChipsInX <<" "<<theRowsInDet<<" "<<ROCSizeInX;
       if(theChipsInY<1 || theChipsInY>maxROCsInY) 
-	std::cout << " CTPPSPixelIndices: Error in ROCsInY " 
-		  << theChipsInY <<" "<<theColsInDet<<" "<<ROCSizeInY<<std::endl;
+	edm::LogError("RPix") << " CTPPSPixelIndices: Error in ROCsInY " 
+		  << theChipsInY <<" "<<theColsInDet<<" "<<ROCSizeInY;
     }
   } 
 
@@ -108,31 +102,28 @@ CTPPSPixelIndices(const int colsInDet,  const int rowsInDet ) :
 
     if(CTPPS_CHECK_LIMITS) {
       if(theChipsInX<1 || theChipsInX>maxROCsInX) 
-	std::cout << " CTPPSPixelIndices: Error in ROCsInX " 
-		  << theChipsInX <<" "<<theRowsInDet<<" "<<ROCSizeInX<<std::endl;
+	edm::LogError("RPix") << " CTPPSPixelIndices: Error in ROCsInX " 
+		  << theChipsInX <<" "<<theRowsInDet<<" "<<ROCSizeInX;
       if(theChipsInY<1 || theChipsInY>maxROCsInY) 
-	std::cout << " CTPPSPixelIndices: Error in ROCsInY " 
-		  << theChipsInY <<" "<<theColsInDet<<" "<<ROCSizeInY<<std::endl;
+	edm::LogError("RPix") << " CTPPSPixelIndices: Error in ROCsInY " 
+		  << theChipsInY <<" "<<theColsInDet<<" "<<ROCSizeInY;
     }
   } 
-  //************************************************************************
+
   ~CTPPSPixelIndices() {}
-  //***********************************************************************
  
   inline int numberOfROCsInX(void) {return theChipsInX;}
   inline int numberOfROCsInY(void) {return theChipsInY;}
 
-  //***********************************************************************
-
   void print(void) const {
 
-    std::cout << " Pixel det with " << theChipsInX << " chips in x and "
-	      << theChipsInY << " in y " << std::endl; 
-    std::cout << " Pixel rows " << theRowsInDet << " and columns " 
-	      << theColsInDet << std::endl;  
-    std::cout << " Rows in one chip " << ROCSizeInX << " and columns " 
-	      << ROCSizeInY << std::endl;  
-    std::cout << " Double columns per ROC " << DColsPerROC << std::endl;
+    edm::LogInfo("RPix") << " Pixel det with " << theChipsInX << " chips in x and "
+	      << theChipsInY << " in y " ; 
+    edm::LogInfo("RPix") << " Pixel rows " << theRowsInDet << " and columns " 
+	      << theColsInDet ;  
+    edm::LogInfo("RPix") << " Rows in one chip " << ROCSizeInX << " and columns " 
+	      << ROCSizeInY ;  
+    edm::LogInfo("RPix") << " Double columns per ROC " << DColsPerROC ;
   }
 
   //********************************************************************
@@ -147,7 +138,7 @@ CTPPSPixelIndices(const int colsInDet,  const int rowsInDet ) :
 
     if(CTPPS_CHECK_LIMITS) { 
       if(dcol<0||dcol>=DColsPerROC||pix<2||pix>161) {
-	std::cout<<"CTPPSPixelIndices: wrong dcol or pix "<<dcol<<" "<<pix<<std::endl;
+	edm::LogError("RPix")<<"CTPPSPixelIndices: wrong dcol or pix "<<dcol<<" "<<pix;
 	rowROC = -1;     // dummy row Address
 	colROC = -1;     // dummy col Address
 	return -1; // Signal error
@@ -162,8 +153,8 @@ CTPPSPixelIndices(const int colsInDet,  const int rowsInDet ) :
 
     if(CTPPS_CHECK_LIMITS) {
       if(colROC<0||colROC>=ROCSizeInY||rowROC<0||rowROC>=ROCSizeInX ) {
-	std::cout<<"CTPPSPixelIndices: wrong col or row "<<colROC<<" "<<rowROC<<" "
-		 <<dcol<<" "<<pix<<std::endl;
+	edm::LogError("RPix")<<"CTPPSPixelIndices: wrong col or row "<<colROC<<" "<<rowROC<<" "
+		 <<dcol<<" "<<pix;
 	rowROC = -1;    // dummy row Address
 	colROC = -1;    // dummy col Address
 	return -1;
@@ -183,7 +174,7 @@ CTPPSPixelIndices(const int colsInDet,  const int rowsInDet ) :
 			int & col,int & row ) const {
     if(CTPPS_CHECK_LIMITS) {
       if(colROC<0 || colROC>=ROCSizeInY || rowROC<0 ||rowROC>=ROCSizeInX) {
-	std::cout<<"CTPPSPixelIndices: wrong index "<<colROC<<" "<<rowROC<<std::endl;
+	edm::LogError("RPix")<<"CTPPSPixelIndices: wrong index "<<colROC<<" "<<rowROC;
 	return -1;
       }
     }
@@ -191,20 +182,20 @@ CTPPSPixelIndices(const int colsInDet,  const int rowsInDet ) :
 // The transformation depends on the ROC-ID
     if(rocId>=0 && rocId<3) {
       row = 159-rowROC;
-      //col = rocId*52 + colROC;
+ 
       col = (rocId+1)*ROCSizeInY - colROC - 1 ;
     } else if(rocId>=3 && rocId<6) {
       row = rowROC;
-      //col = (16-rocId)*52 - colROC - 1;
+ 
       col = (5-rocId)*ROCSizeInY + colROC;
     } else {
-      std::cout<<"CTPPSPixelIndices: wrong ROC ID "<<rocId<<std::endl;
+      edm::LogError("RPix")<<"CTPPSPixelIndices: wrong ROC ID "<<rocId;
       return -1;
     }
     if(CTPPS_CHECK_LIMITS) {
       if(col<0 || col>=(ROCSizeInY*theChipsInY) || row<0 || 
 	 row>=(ROCSizeInX*theChipsInX)) {
-	std::cout<<"CTPPSPixelIndices: wrong index "<<col<<" "<<row<<std::endl;
+	edm::LogError("RPix")<<"CTPPSPixelIndices: wrong index "<<col<<" "<<row;
 	return -1;
       }
     }
@@ -222,33 +213,33 @@ CTPPSPixelIndices(const int colsInDet,  const int rowsInDet ) :
     if(CTPPS_CHECK_LIMITS) {
       if(col<0 || col>=(ROCSizeInY*theChipsInY) || row<0 || 
 	 row>=(ROCSizeInX*theChipsInX)) {
-	std::cout<<"CTPPSPixelIndices: wrong index 3 "<<std::endl;
+	edm::LogError("RPix")<<"CTPPSPixelIndices: wrong index 3 ";
 	return -1;
       }
     }
 
 // Get the 2d ROC coordinate
     int chipX = row / ROCSizeInX; // row index of the chip 0-1
-    int chipY = col / ROCSizeInY; // col index of the chip 0-2  (7 for barrel)
+    int chipY = col / ROCSizeInY; // col index of the chip 0-2  
 
 // Get the ROC id from the 2D index
     rocId = rocIndex(chipX,chipY); 
     if(CTPPS_CHECK_LIMITS && (rocId<0 || rocId>=6) ) {
-      std::cout<<"CTPPSPixelIndices: wrong roc index "<<rocId<<std::endl;
+      edm::LogError("RPix")<<"CTPPSPixelIndices: wrong roc index "<<rocId;
       return -1;
     }
 // get the local ROC coordinates
     rowROC = (row%ROCSizeInX); // row in chip
     colROC = (col%ROCSizeInY); // col in chip
 
-    if(rocId<3) { // For lower 8 ROCs the coordinates are reversed
+    if(rocId<3) {
       colROC = 51 - colROC;
       rowROC = 79 - rowROC;
     }
 
     if(CTPPS_CHECK_LIMITS) {
       if(colROC<0||colROC>=ROCSizeInY||rowROC<0||rowROC>=ROCSizeInX) {
-	std::cout<<"CTPPSPixelIndices: wrong index "<<colROC<<" "<<rowROC<<std::endl;
+	edm::LogError("RPix")<<"CTPPSPixelIndices: wrong index "<<colROC<<" "<<rowROC;
 	return -1;
       }
     }
@@ -256,34 +247,32 @@ CTPPSPixelIndices(const int colsInDet,  const int rowsInDet ) :
     return 0;
   }
 
-// get ROC ID from module row and column
- 
- // get ROC ID from module row and column
+  // get ROC ID from module row and column
  
   int getROCId(const int col,const int row) const {
 
     int rocId = -1;
 
-      if(CTPPS_CHECK_LIMITS) {
-	if(col<0 || col>=(ROCSizeInY*theChipsInY) || row<0 || 
-			     row>=(ROCSizeInX*theChipsInX)) {
-	  std::cout<<"CTPPSPixelIndices: wrong index 3 "<<std::endl;
-	  return -1;
-	}
-      }
-
-      // Get the 2d ROC coordinate
-      int chipX = row / ROCSizeInX; // row index of the chip 0-1
-      int chipY = col / ROCSizeInY; // col index of the chip 0-2  (7 for barrel)
-
-      // Get the ROC id from the 2D index
-      rocId = rocIndex(chipX,chipY); 
-      if(CTPPS_CHECK_LIMITS && (rocId<0 || rocId>=6) ) {
-	std::cout<<"CTPPSPixelIndices: wrong roc index "<<rocId<<std::endl;
+    if(CTPPS_CHECK_LIMITS) {
+      if(col<0 || col>=(ROCSizeInY*theChipsInY) || row<0 || 
+	 row>=(ROCSizeInX*theChipsInX)) {
+	edm::LogError("RPix")<<"CTPPSPixelIndices: wrong index ";
 	return -1;
       }
+    }
+
+    // Get the 2d ROC coordinate
+    int chipX = row / ROCSizeInX; // row index of the chip 0-1
+    int chipY = col / ROCSizeInY; // col index of the chip 0-2 
+
+    // Get the ROC id from the 2D index
+    rocId = rocIndex(chipX,chipY); 
+    if(CTPPS_CHECK_LIMITS && (rocId<0 || rocId>=6) ) {
+      edm::LogError("RPix")<<"CTPPSPixelIndices: wrong roc index "<<rocId;
+      return -1;
+    }
  
-      return rocId;
+    return rocId;
   }
  
 
@@ -291,7 +280,7 @@ CTPPSPixelIndices(const int colsInDet,  const int rowsInDet ) :
 // is pixel on the edge?
   bool isOnEdge(const int col, const int row) const {
     if(col == 0 || row == 0 || col == (defaultDetSizeInY-1) || row == (defaultDetSizeInX-1)) return true;
-       return false;
+    return false;
   }
 
 
@@ -305,7 +294,7 @@ CTPPSPixelIndices(const int colsInDet,  const int rowsInDet ) :
     int rocId = -1;
     if(CTPPS_CHECK_LIMITS) {
       if(chipX<0 || chipX>=2 ||chipY<0 || chipY>=3) {
-	std::cout<<"PixelChipIndices: wrong index "<<chipX<<" "<<chipY<<std::endl;
+	edm::LogError("RPix")<<"PixelChipIndices: wrong index "<<chipX<<" "<<chipY;
 	return -1;
       }
     }
@@ -314,7 +303,7 @@ CTPPSPixelIndices(const int colsInDet,  const int rowsInDet ) :
 
     if(CTPPS_CHECK_LIMITS) {
       if(rocId < 0 || rocId >= (maxROCsInX*maxROCsInY) ) {
-	std::cout << "CTPPSPixelIndices: Error in ROC index " << rocId << std::endl;
+	edm::LogError("RPix") << "CTPPSPixelIndices: Error in ROC index " << rocId ;
 	return -1;
       }
     }
@@ -328,7 +317,7 @@ CTPPSPixelIndices(const int colsInDet,  const int rowsInDet ) :
     int dColumnId = (colROC)/2; // double column 0-25
     if(CTPPS_CHECK_LIMITS) {
       if(dColumnId<0 || dColumnId>=26) {
-	std::cout<<"CTPPSPixelIndices: wrong dcol index  "<<dColumnId<<" "<<colROC<<std::endl;
+	edm::LogError("RPix")<<"CTPPSPixelIndices: wrong dcol index  "<<dColumnId<<" "<<colROC;
 	return -1;
       }
     }
@@ -353,8 +342,8 @@ CTPPSPixelIndices(const int colsInDet,  const int rowsInDet ) :
     return std::pair<int,int>(rowROC,colROC);
   }
     
- inline int getDefaultRowDetSize() const { return defaultDetSizeInX;}
- inline int getDefaultColDetSize() const { return defaultDetSizeInY;}
+  inline int getDefaultRowDetSize() const { return defaultDetSizeInX;}
+  inline int getDefaultColDetSize() const { return defaultDetSizeInY;}
 
 
   //***********************************************************************
