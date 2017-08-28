@@ -97,7 +97,7 @@ void CTPPSPixelRecHitProducer::produce(edm::Event& iEvent, const edm::EventSetup
 
 	      CLHEP::Hep3Vector localV(_rh.getPoint().x(),_rh.getPoint().y(),_rh.getPoint().z() );
 	      CLHEP::Hep3Vector globalV = geometry->LocalToGlobal(ds_rh2.id,localV);
-	      if(verbosity_)std::cout << "ID : " << ds_rh2.id << " hit  " << _rh.getPoint().x()<<" "<<_rh.getPoint().y()<<" " <<_rh.getPoint().z()<< "   "<< globalV.x() << " " << globalV.y() <<" " <<std::setprecision(6) << globalV.z() <<std::endl;
+	      if(verbosity_)std::cout << "ID ->: " << ds_rh2.id << " hit  " << _rh.getPoint().x()<<" "<<_rh.getPoint().y()<<" " <<_rh.getPoint().z()<< "   "<< globalV.x() << " " << globalV.y() <<" " <<std::setprecision(20) << globalV.z() <<std::endl;
 
 	    }
 	  }

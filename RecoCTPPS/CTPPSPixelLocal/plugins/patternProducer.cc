@@ -100,7 +100,10 @@ void patternProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 	      CLHEP::Hep3Vector localV(_rh.getPoint().x(),_rh.getPoint().y(),_rh.getPoint().z() );
 	      CLHEP::Hep3Vector globalV = geometry->LocalToGlobal(ds_rh2.id,localV);
-	      if(verbosity_)std::cout << "ID : " << ds_rh2.id << " hit  " << _rh.getPoint().x()<<" "<<_rh.getPoint().y()<<" " <<_rh.getPoint().z()<< "   "<< globalV.x() << " " << globalV.y() <<" " <<std::setprecision(6) << globalV.z() <<std::endl;
+	      CTPPSPixelDetId iDd(ds_rh2.id);
+	      if(verbosity_)std::cout << "ID : " << 
+/*ds_rh2.id*/
+iDd << " hit  " << _rh.getPoint().x()<<" "<<_rh.getPoint().y()<<" " <<_rh.getPoint().z()<< "   "<< globalV.x() << " " << globalV.y() <<" " <<std::setprecision(12) << globalV.z() <<std::endl;
 
 	    }
 	  }
